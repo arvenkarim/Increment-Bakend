@@ -12,7 +12,7 @@ public class Counterapp {
     private static int count = 0;
 
     public static void main(String[] args) {
-        System.out.println("🚀 Starte Javalin Counter... (passt perfekt zu deiner HTML!)");
+        System.out.println("Starte Javalin Counter... (passt perfekt zu deiner HTML!)");
 
         Javalin app = Javalin.create(config -> {
             //index.html wird automatisch unter http://localhost:8080 geladen
@@ -22,7 +22,7 @@ public class Counterapp {
 
         // GET /api/counter → gibt aktuelle Zahl zurück
         app.get("/api/counter", ctx -> {
-            System.out.println("📡 GET /api/counter → aktuell: " + count);
+            System.out.println("GET /api/counter → aktuell: " + count);
 
             Map<String, Integer> response = new HashMap<>();
             response.put("count", count);
@@ -34,7 +34,7 @@ public class Counterapp {
         app.post("/api/counter", ctx -> {
             count = count + 1;
 
-            System.out.println("🎉 POST /api/counter → neuer Stand: " + count);
+            System.out.println("POST /api/counter → neuer Stand: " + count);
 
             Map<String, Integer> response = new HashMap<>();
             response.put("count", count);
