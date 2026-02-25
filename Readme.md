@@ -2,7 +2,7 @@
 
 Einfache Zähl-App mit Javalin (Java)
 
-Was macht das Ding?
+Was macht es
 - Startet eine Webseite
 - Zeigt eine Zahl (fängt bei 0 an)
 - Button "Increment" macht +1
@@ -17,4 +17,3 @@ Dateien:
 - src/main/resources/public/index.html  → die Seite
 - src/main/java/de/counter/CounterApp.java  → das Backend
 
-Fertig. Viel Spaß beim Rumklicken 😄
