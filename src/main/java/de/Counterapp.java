@@ -46,7 +46,7 @@ public class Counterapp {
         app.start(8080);
 
         System.out.println("✅ Server läuft!");
-        System.out.println("   Öffne jetzt: http://localhost:8080");
-        System.out.println("   Dein Button sollte jetzt perfekt zählen!");
+        System.out.println("Öffne jetzt: http://localhost:8080");
+        System.out.println("Dein Button sollte jetzt perfekt zählen!");
     }
 }
