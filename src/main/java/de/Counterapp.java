@@ -1,52 +1,71 @@
 package de;
 
-import io.javalin.Javalin;
-import io.javalin.http.staticfiles.Location;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.net.*;
 
 public class Counterapp {
 
-    // Zähler – bleibt nur im Speicher (neu starten = wieder 0)
-    private static int count = 0;
+    static int count = 0;
 
     public static void main(String[] args) {
-        System.out.println("Starte Javalin Counter... (passt perfekt zu deiner HTML!)");
 
-        Javalin app = Javalin.create(config -> {
-            //index.html wird automatisch unter http://localhost:8080 geladen
-            config.staticFiles.add("public", Location.CLASSPATH);
-        });
+        try {
+            ServerSocket server = new ServerSocket(8080);
+
+            while (true) {
+
+                Socket socket = server.accept();
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(socket.getInputStream())
+                );
+
+                OutputStream out = socket.getOutputStream();
+
+                String firstLine = in.readLine();
+
+                if (firstLine != null) {
+                    System.out.println("REQ: " + firstLine);
+                }
 
 
-        // GET /api/counter → gibt aktuelle Zahl zurück
-        app.get("/api/counter", ctx -> {
-            System.out.println("GET /api/counter → aktuell: " + count);
+                String line;
+                while ((line = in.readLine()) != null && !line.isEmpty()) {
+                }
 
-            Map<String, Integer> response = new HashMap<>();
-            response.put("count", count);
 
-            ctx.json(response);
-        });
+                if (firstLine != null && firstLine.startsWith("POST") && firstLine.contains("/api/counter")) {
+                    count++;
+                }
+                if (line != null && line.contains("OPTIONS")) {
+                    String res =
+                            "HTTP/1.1 200 OK\r\n" +
+                                    "Access-Control-Allow-Origin: *\r\n" +
+                                    "Access-Control-Allow-Methods: GET, POST, OPTIONS\r\n" +
+                                    "Access-Control-Allow-Headers: *\r\n\r\n";
+                    out.write(res.getBytes());
+                    out.flush();
+                    socket.close();
+                    continue;
+                }
 
-        // POST /api/counter → zählt um 1 hoch (wird von einem Button aufgerufen!)
-        app.post("/api/counter", ctx -> {
-            count = count + 1;
+                String body = "{\"count\":" + count + "}";
 
-            System.out.println("POST /api/counter → neuer Stand: " + count);
+                String response =
+                        "HTTP/1.1 200 OK\r\n" +
+                                "Content-Type: application/json\r\n" +
+                                "Access-Control-Allow-Origin: *\r\n" +
+                                "Content-Length: " + body.length() + "\r\n\r\n" +
+                                body;
 
-            Map<String, Integer> response = new HashMap<>();
-            response.put("count", count);
+                out.write(response.getBytes());
+                out.flush();
 
-            ctx.json(response);
-        });
+                socket.close();
+            }
 
-        // Server starten
-        app.start(8080);
-
-        System.out.println("✅ Server läuft!");
-        System.out.println("Öffne jetzt: http://localhost:8080");
-        System.out.println("Dein Button sollte jetzt perfekt zählen!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
